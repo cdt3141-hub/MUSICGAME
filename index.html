@@ -1,122 +1,89 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-<meta charset="UTF-8" />
-<title>음악 맞추기 게임 🎶</title>
-<style>
-    body {
-        background: #ffeaf6;
-        font-family: "Pretendard", sans-serif;
-        text-align: center;
-        padding: 40px;
-    }
-    h1 {
-        color: #ff6fb5;
-        font-size: 32px;
-    }
-    .btn {
-        background: #ffb5e8;
-        border: none;
-        padding: 12px 20px;
-        margin: 10px;
-        border-radius: 10px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .btn:hover {
-        background: #ff9dd6;
-    }
-    #timerSelect {
-        padding: 8px;
-        font-size: 16px;
-        border-radius: 8px;
-    }
-    .score-box {
-        margin-top: 20px;
-        background: #fff0fa;
-        padding: 10px;
-        border-radius: 12px;
-        display: inline-block;
-    }
-</style>
+    <meta charset="UTF-8" />
+    <title>음악 맞추기 게임</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            margin-top: 70px;
+        }
+        button {
+            font-size: 22px;
+            padding: 15px 30px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #trackNumber {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
-
 <body>
 
-<h1>🎵 음악 맞추기 게임 🎵</h1>
+    <h1>🎧 음악 맞추기 게임</h1>
+    <div id="trackNumber">1 / 10</div>
 
-<div>
-    <select id="timerSelect">
-        <option value="1">1초 재생</option>
-        <option value="2">2초 재생</option>
-        <option value="3">3초 재생</option>
-    </select>
-</div>
+    <button id="playBtn">▶ 재생</button>
+    <button id="nextBtn">➡ 다음곡</button>
 
-<br>
+    <audio id="player"></audio>
 
-<button class="btn" onclick="playMusic()">▶ 재생</button>
-<button class="btn" onclick="stopMusic()">⏸ 정지</button>
+    <script>
+        // mp3 파일 리스트 (여기만 네 파일명으로 바꾸면 됨!)
+        const tracks = [
+            "song1.mp3",
+            "song2.mp3",
+            "song3.mp3",
+            "song4.mp3",
+            "song5.mp3",
+            "song6.mp3",
+            "song7.mp3",
+            "song8.mp3",
+            "song9.mp3",
+            "song10.mp3"
+        ];
 
-<br><br>
+        let currentIndex = 0;
+        const player = document.getElementById("player");
+        const playBtn = document.getElementById("playBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const trackNumber = document.getElementById("trackNumber");
 
-<div class="score-box">
-    현재 점수: <span id="score">0</span>
-</div>
+        // 현재 트랙 설정
+        function loadTrack() {
+            player.src = tracks[currentIndex];
+            trackNumber.innerText = `${currentIndex + 1} / ${tracks.length}`;
+        }
 
-<br><br>
+        loadTrack();
 
-<button class="btn" onclick="addScore()">정답 맞춤! +1점</button>
-
-<!-- YouTube iframe -->
-<div style="display:none;">
-    <iframe id="player" width="560" height="315"
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1"
-        frameborder="0" allow="autoplay"></iframe>
-</div>
-
-<script>
-    var player;
-    var score = 0;
-
-    // YouTube API 로드
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player("player", {
-            events: {}
+        // 재생/멈춤
+        playBtn.addEventListener("click", () => {
+            if (player.paused) {
+                player.play();
+                playBtn.innerText = "⏸ 멈춤";
+            } else {
+                player.pause();
+                player.currentTime = 0; // 항상 처음부터 재생하도록
+                playBtn.innerText = "▶ 재생";
+            }
         });
-    }
 
-    // YouTube API 스크립트 삽입
-    var tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-
-    // 음악 재생 함수
-    function playMusic() {
-        if (!player) return;
-
-        let seconds = parseInt(document.getElementById("timerSelect").value);
-
-        player.seekTo(0);
-        player.playVideo();
-
-        setTimeout(() => {
-            player.pauseVideo();
-        }, seconds * 1000);
-    }
-
-    // 정지 버튼
-    function stopMusic() {
-        if (player) player.pauseVideo();
-    }
-
-    // 점수 증가
-    function addScore() {
-        score++;
-        document.getElementById("score").innerText = score;
-    }
-</script>
-
+        // 다음 곡
+        nextBtn.addEventListener("click", () => {
+            currentIndex++;
+            if (currentIndex >= tracks.length) {
+                alert("🎉 모든 곡을 다 들었어요!");
+                currentIndex = 0; // 다시 처음으로 돌아가기
+            }
+            loadTrack();
+            player.pause();
+            player.currentTime = 0;
+            playBtn.innerText = "▶ 재생";
+        });
+    </script>
 </body>
 </html>
