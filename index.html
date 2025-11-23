@@ -4,74 +4,227 @@
     <meta charset="UTF-8" />
     <title>음악 맞추기 게임</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            margin-top: 70px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Comic Sans MS", "Arial Rounded MT Bold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #ffb6e6, #c48dff);
+            color: #fff;
         }
-        button {
-            font-size: 22px;
-            padding: 15px 30px;
-            margin: 10px;
-            cursor: pointer;
+
+        .container {
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 28px 24px 32px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 18px 40px rgba(120, 50, 160, 0.45);
+            backdrop-filter: blur(14px);
+            text-align: center;
         }
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            margin: 0 0 18px;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        #trackNumberWrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.22);
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        #trackNumberLabel {
+            font-weight: 600;
+        }
+
         #trackNumber {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 430px) {
+            .btn-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        button {
+            flex: 1;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px;
+            font-size: 17px;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg, #ff7ecb, #f24fb2);
+            box-shadow: 0 8px 16px rgba(210, 60, 150, 0.45);
+            transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, opacity 0.12s;
+        }
+
+        button#answerBtn {
+            background: linear-gradient(135deg, #ffcfdf, #b0a8ff);
+            color: #5b3c7c;
+            box-shadow: 0 8px 16px rgba(132, 99, 201, 0.45);
+        }
+
+        button#nextBtn {
+            background: linear-gradient(135deg, #d19bff, #ff8ad4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(90, 40, 140, 0.55);
+            opacity: 0.96;
+        }
+
+        button:active {
+            transform: translateY(1px) scale(0.97);
+            box-shadow: 0 4px 10px rgba(70, 25, 110, 0.4);
+            opacity: 0.9;
+        }
+
+        .hint {
+            margin-top: 6px;
+            font-size: 12px;
+            opacity: 0.9;
         }
 
         /* 정답 이미지 팝업 */
         #answerPopup {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
+            inset: 0;
+            background: rgba(20, 0, 40, 0.78);
             display: none;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            z-index: 999;
+            animation: fadeIn 0.2s ease-out;
         }
+
+        #answerPopupInner {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 22px;
+            padding: 18px 18px 22px;
+            max-width: 420px;
+            width: 86%;
+            text-align: center;
+            box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45);
+            animation: popIn 0.18s ease-out;
+        }
+
+        #answerPopupInner h2 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #ff4fa8;
+        }
+
+        #answerPopupInner p {
+            margin: 0 0 10px;
+            font-size: 13px;
+            color: #7b5b9b;
+        }
+
         #answerPopup img {
             width: 90vw;
-            max-height: 80vh;
+            max-width: 360px;
+            max-height: 60vh;
             object-fit: contain;
-            border-radius: 10px;
+            border-radius: 16px;
+            margin-bottom: 12px;
         }
+
         #closeAnswer {
-            margin-top: 20px;
-            padding: 12px 25px;
-            font-size: 20px;
-            cursor: pointer;
+            background: linear-gradient(135deg, #ff9ad5, #c98dff);
+            color: #fff;
+            padding: 10px 22px;
+            font-size: 16px;
+            box-shadow: 0 8px 16px rgba(210, 90, 170, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <h1>🎧 음악 맞추기 게임</h1>
-    <div id="trackNumber">1 / 10</div>
+    <div class="container">
+        <h1>🎧 핑크퍼플 음악 맞추기</h1>
+        <p class="subtitle">친구랑 돌아가면서 노래 맞혀보기 ♪</p>
 
-    <button id="playBtn">▶ 재생</button>
-    <button id="answerBtn">❓ 정답보기</button>
-    <button id="nextBtn">➡ 다음곡</button>
+        <div id="trackNumberWrapper">
+            <span id="trackNumberLabel">현재 곡</span>
+            <span id="trackNumber">1 / 10</span>
+        </div>
+
+        <div class="btn-group">
+            <button id="playBtn">▶ 재생</button>
+            <button id="answerBtn">❓ 정답보기</button>
+            <button id="nextBtn">➡ 다음곡</button>
+        </div>
+
+        <p class="hint">재생 → 친구가 정답 말하기 → 정답보기 → 다음곡 순서로 진행해봐 ✨</p>
+    </div>
 
     <audio id="player" type="audio/mpeg"></audio>
 
     <!-- 정답 팝업 -->
     <div id="answerPopup">
-        <img id="answerImage" src="">
-        <button id="closeAnswer">확인</button>
+        <div id="answerPopupInner">
+            <h2>정답 공개 💗</h2>
+            <p>다음 곡으로 넘어가기 전에 정답 한 번 더 확인해봐!</p>
+            <img id="answerImage" src="">
+            <button id="closeAnswer">확인하고 돌아가기</button>
+        </div>
     </div>
 
     <script>
         // mp3 리스트
-        const tracks = ["1.mp3","2.mp3","3.mp3","4.mp3","5.mp3",
-                        "6.mp3","7.mp3","8.mp3","9.mp3","10.mp3"];
+        const tracks = [
+            "1.mp3","2.mp3","3.mp3","4.mp3","5.mp3",
+            "6.mp3","7.mp3","8.mp3","9.mp3","10.mp3"
+        ];
 
         // 정답 이미지 리스트
-        const answers = ["1.png","2.png","3.png","4.png","5.png",
-                         "6.png","7.png","8.png","9.png","10.png"];
+        const answers = [
+            "1.png","2.png","3.png","4.png","5.png",
+            "6.png","7.png","8.png","9.png","10.png"
+        ];
 
         let currentIndex = 0;
 
@@ -79,7 +232,6 @@
         const playBtn = document.getElementById("playBtn");
         const answerBtn = document.getElementById("answerBtn");
         const nextBtn = document.getElementById("nextBtn");
-
         const trackNumber = document.getElementById("trackNumber");
 
         const popup = document.getElementById("answerPopup");
@@ -122,7 +274,7 @@
             currentIndex++;
 
             if (currentIndex >= tracks.length) {
-                alert("🎉 모든 곡을 다 들었습니다!");
+                alert("🎉 모든 곡을 다 들었습니다! 처음으로 돌아갈게요.");
                 currentIndex = 0;
             }
 
@@ -131,7 +283,6 @@
             player.currentTime = 0;
             playBtn.innerText = "▶ 재생";
         });
-
     </script>
 </body>
 </html>
