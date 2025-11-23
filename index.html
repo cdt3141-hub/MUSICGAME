@@ -19,6 +19,30 @@
             font-size: 20px;
             margin-bottom: 20px;
         }
+
+        /* 정답 이미지 팝업 */
+        #answerPopup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #answerPopup img {
+            max-width: 80%;
+            border-radius: 10px;
+        }
+        #closeAnswer {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 20px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -31,33 +55,41 @@
 
     <audio id="player" type="audio/mpeg"></audio>
 
+    <!-- 정답 팝업 -->
+    <div id="answerPopup">
+        <img id="answerImage" src="">
+        <button id="closeAnswer">확인</button>
+    </div>
+
     <script>
-        // mp3 파일 리스트 (여기만 네 파일명으로 바꾸면 됨!)
+        // mp3 리스트
         const tracks = [
-            "1.mp3",
-            "2.mp3",
-            "3.mp3",
-            "4.mp3",
-            "5.mp3",
-            "6.mp3",
-            "7.mp3",
-            "8.mp3",
-            "9.mp3",
-            "10.mp3"
+            "1.mp3","2.mp3","3.mp3","4.mp3","5.mp3",
+            "6.mp3","7.mp3","8.mp3","9.mp3","10.mp3"
+        ];
+
+        // 정답 이미지 리스트
+        const answers = [
+            "1.PNG","2.PNG","3.PNG","4.PNG","5.PNG",
+            "6.PNG","7.PNG","8.PNG","9.PNG","10.PNG"
         ];
 
         let currentIndex = 0;
+
         const player = document.getElementById("player");
         const playBtn = document.getElementById("playBtn");
         const nextBtn = document.getElementById("nextBtn");
         const trackNumber = document.getElementById("trackNumber");
 
-        // 현재 트랙 설정
+        const popup = document.getElementById("answerPopup");
+        const answerImg = document.getElementById("answerImage");
+        const closeBtn = document.getElementById("closeAnswer");
+
+        // 트랙 로드
         function loadTrack() {
-    player.src = tracks[currentIndex];
-    player.type = "audio/mpeg";
-    trackNumber.innerText = `${currentIndex + 1} / ${tracks.length}`;
-}
+            player.src = tracks[currentIndex];
+            trackNumber.innerText = `${currentIndex + 1} / ${tracks.length}`;
+        }
 
         loadTrack();
 
@@ -68,18 +100,32 @@
                 playBtn.innerText = "⏸ 멈춤";
             } else {
                 player.pause();
-                player.currentTime = 0; // 항상 처음부터 재생하도록
+                player.currentTime = 0;
                 playBtn.innerText = "▶ 재생";
             }
         });
 
-        // 다음 곡
+        // 다음곡 (정답 먼저 보여주기)
         nextBtn.addEventListener("click", () => {
+
+            // 현재 곡의 정답 이미지 표시
+            answerImg.src = answers[currentIndex];
+            popup.style.display = "flex";
+
+            // 다음곡 index 증가 (확인 버튼 누를 때 실제로 적용됨)
+        });
+
+        // 정답 확인 → 다음곡 재생 준비
+        closeBtn.addEventListener("click", () => {
+            popup.style.display = "none";
+
             currentIndex++;
+
             if (currentIndex >= tracks.length) {
                 alert("🎉 모든 곡을 다 들었어요!");
-                currentIndex = 0; // 다시 처음으로 돌아가기
+                currentIndex = 0;
             }
+
             loadTrack();
             player.pause();
             player.currentTime = 0;
@@ -88,5 +134,3 @@
     </script>
 </body>
 </html>
-
-
