@@ -34,7 +34,9 @@
             flex-direction: column;
         }
         #answerPopup img {
-            max-width: 80%;
+            width: 90vw;
+            max-height: 80vh;
+            object-fit: contain;
             border-radius: 10px;
         }
         #closeAnswer {
@@ -51,6 +53,7 @@
     <div id="trackNumber">1 / 10</div>
 
     <button id="playBtn">▶ 재생</button>
+    <button id="answerBtn">❓ 정답보기</button>
     <button id="nextBtn">➡ 다음곡</button>
 
     <audio id="player" type="audio/mpeg"></audio>
@@ -63,22 +66,20 @@
 
     <script>
         // mp3 리스트
-        const tracks = [
-            "1.mp3","2.mp3","3.mp3","4.mp3","5.mp3",
-            "6.mp3","7.mp3","8.mp3","9.mp3","10.mp3"
-        ];
+        const tracks = ["1.mp3","2.mp3","3.mp3","4.mp3","5.mp3",
+                        "6.mp3","7.mp3","8.mp3","9.mp3","10.mp3"];
 
         // 정답 이미지 리스트
-        const answers = [
-            "1.png","2.png","3.png","4.png","5.png",
-            "6.png","7.png","8.png","9.png","10.png"
-        ];
+        const answers = ["1.png","2.png","3.png","4.png","5.png",
+                         "6.png","7.png","8.png","9.png","10.png"];
 
         let currentIndex = 0;
 
         const player = document.getElementById("player");
         const playBtn = document.getElementById("playBtn");
+        const answerBtn = document.getElementById("answerBtn");
         const nextBtn = document.getElementById("nextBtn");
+
         const trackNumber = document.getElementById("trackNumber");
 
         const popup = document.getElementById("answerPopup");
@@ -105,24 +106,23 @@
             }
         });
 
-        // 다음곡 (정답 먼저 보여주기)
-        nextBtn.addEventListener("click", () => {
-
-            // 현재 곡의 정답 이미지 표시
+        // 정답보기 버튼
+        answerBtn.addEventListener("click", () => {
             answerImg.src = answers[currentIndex];
             popup.style.display = "flex";
-
-            // 다음곡 index 증가 (확인 버튼 누를 때 실제로 적용됨)
         });
 
-        // 정답 확인 → 다음곡 재생 준비
+        // 팝업 닫기
         closeBtn.addEventListener("click", () => {
             popup.style.display = "none";
+        });
 
+        // 다음곡 버튼
+        nextBtn.addEventListener("click", () => {
             currentIndex++;
 
             if (currentIndex >= tracks.length) {
-                alert("🎉 모든 곡을 다 들었어요!");
+                alert("🎉 모든 곡을 다 들었습니다!");
                 currentIndex = 0;
             }
 
@@ -131,7 +131,7 @@
             player.currentTime = 0;
             playBtn.innerText = "▶ 재생";
         });
+
     </script>
 </body>
 </html>
-
