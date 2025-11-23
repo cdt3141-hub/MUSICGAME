@@ -29,7 +29,7 @@
     <button id="playBtn">▶ 재생</button>
     <button id="nextBtn">➡ 다음곡</button>
 
-    <audio id="player"></audio>
+    <audio id="player" type="audio/mpeg"></audio>
 
     <script>
         // mp3 파일 리스트 (여기만 네 파일명으로 바꾸면 됨!)
@@ -54,9 +54,10 @@
 
         // 현재 트랙 설정
         function loadTrack() {
-            player.src = tracks[currentIndex];
-            trackNumber.innerText = `${currentIndex + 1} / ${tracks.length}`;
-        }
+    player.src = tracks[currentIndex];
+    player.type = "audio/mpeg";
+    trackNumber.innerText = `${currentIndex + 1} / ${tracks.length}`;
+}
 
         loadTrack();
 
@@ -87,4 +88,5 @@
     </script>
 </body>
 </html>
+
 
